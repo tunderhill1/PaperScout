@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+backend/.venv/
+.env
+
+# macOS
+.DS_Store
+
+# VSCode
+.vscode/
+
+# Byte-compiled
+*.pyo
+
+# Pytest cache
+.pytest_cache/
+
+# Migrations cache (later)
+alembic/__pycache__/

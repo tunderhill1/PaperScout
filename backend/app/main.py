@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 
+from app.config.settings import settings
+from app.core.database import engine, get_db
+from app.api.papers import router as papers_router
 
 def create_app() -> FastAPI:
   app = FastAPI(
@@ -9,7 +13,14 @@ def create_app() -> FastAPI:
     description="Backend API for PaperScout: research paper search and recommendations.",
   )
 
-  # CORS – will later restrict to frontend domain
+  print(f"Running in: {settings.environment}")
+  print(f"Database URL: {settings.database_url}")
+
+  # Test DB connection at startup
+  with engine.connect() as conn:
+    result = conn.execute(text("SELECT 1"))
+    print("Database connected:", result.scalar())
+
   app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,11 +29,12 @@ def create_app() -> FastAPI:
     allow_headers=["*"],
   )
 
+  app.include_router(papers_router, prefix="/papers")
+
   @app.get("/health")
   async def health_check():
     return {"status": "ok"}
-
+  
   return app
-
 
 app = create_app()

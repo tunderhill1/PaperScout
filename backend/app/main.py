@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
+from app.config.settings import settings
 
 def create_app() -> FastAPI:
   app = FastAPI(
@@ -9,7 +9,9 @@ def create_app() -> FastAPI:
     description="Backend API for PaperScout: research paper search and recommendations.",
   )
 
-  # CORS – will later restrict to frontend domain
+  print(f"Running in: {settings.environment}")
+  print(f"DB URL: {settings.database_url}")
+
   app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,6 +25,5 @@ def create_app() -> FastAPI:
     return {"status": "ok"}
 
   return app
-
 
 app = create_app()

@@ -5,6 +5,11 @@ from sqlalchemy import text
 from app.config.settings import settings
 from app.core.database import engine, get_db
 from app.api.papers import router as papers_router
+from app.api.ingestion import router as ingestion_router
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
 
 def create_app() -> FastAPI:
   app = FastAPI(
@@ -30,7 +35,8 @@ def create_app() -> FastAPI:
   )
 
   app.include_router(papers_router, prefix="/papers")
-
+  app.include_router(ingestion_router, prefix="")
+  
   @app.get("/health")
   async def health_check():
     return {"status": "ok"}

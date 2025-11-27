@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.paper import Paper
+from app.services.search_service import semantic_search
 
 router = APIRouter()
 
@@ -9,6 +10,15 @@ router = APIRouter()
 def list_papers(db: Session = Depends(get_db)):
   papers = db.query(Paper).limit(10).all()
   return papers
+
+@router.get("/search")
+def search(
+  query: str,
+  limit: int = 10,
+  db: Session = Depends(get_db)
+):
+  results = semantic_search(db, query, limit)
+  return {"query": query, "results": results}
 
 @router.post("/ingest")
 async def ingest(

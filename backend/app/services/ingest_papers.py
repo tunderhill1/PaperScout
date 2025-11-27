@@ -6,6 +6,7 @@ from app.services.ingestion_helpers import get_or_create_author, get_or_create_f
 from app.models.paper_author import PaperAuthor
 from app.models.paper_field import PaperField
 from app.services.ingestion_logger import log_ingestion
+from app.services.embedding_service import compute_paper_embedding
 
 import logging
 logger = logging.getLogger(__name__)
@@ -47,6 +48,15 @@ async def ingest_papers_from_query(db: Session, query: str, max_pages: int = 5):
       db.add(paper)
       db.flush()  # ensures paper.id is available
 
+      # Compute embedding
+      try:
+        paper.embedding = compute_paper_embedding(
+          paper.title,
+          paper.abstract,
+        )
+      except Exception as e:
+        logger.error(f"Failed to embed paper {paper.external_id}: {e}")
+        
       # Add authors
       for author_entry in paper_data.authorships:
         author_info = author_entry.author

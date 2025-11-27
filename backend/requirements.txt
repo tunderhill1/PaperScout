@@ -7,3 +7,6 @@ sqlalchemy
 psycopg[binary]
 alembic
 httpx
+pgvector
+sentence-transformers
+torch

@@ -51,8 +51,12 @@ export default function SearchPage() {
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleSearch();
+          }}
           placeholder="e.g. transformer models"
           className="flex-1 border px-4 py-2 rounded-lg"
+          autoFocus
         />
         <button
           onClick={handleSearch}

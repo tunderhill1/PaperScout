@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.config.settings import settings
-from app.core.database import engine, create_all
+from app.core.database import engine
 
 def create_app() -> FastAPI:
   app = FastAPI(
@@ -32,9 +32,6 @@ def create_app() -> FastAPI:
   async def health_check():
     return {"status": "ok"}
   
-  # Debug-only: ensure tables exist
-  create_all()
-
   return app
 
 app = create_app()

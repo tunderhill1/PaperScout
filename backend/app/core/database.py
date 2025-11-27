@@ -13,7 +13,4 @@ def get_db():
     yield db
   finally:
     db.close()
-    
-# For migrations and debugging — create tables if not using Alembic yet
-def create_all():
-  Base.metadata.create_all(bind=engine)
+

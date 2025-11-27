@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import PaperCard from "@/components/PaperCard";
 
 interface PaperResult {
   id: number;
@@ -65,34 +66,7 @@ export default function SearchPage() {
 
       <div className="space-y-6">
         {results.map((paper) => (
-          <div
-            key={paper.id}
-            className="border p-4 rounded-lg bg-white shadow-sm"
-          >
-            <h2 className="text-xl font-semibold">{paper.title}</h2>
-
-            {paper.abstract && (
-              <p className="text-gray-600 mt-2 line-clamp-3">
-                {paper.abstract}
-              </p>
-            )}
-
-            <div className="text-sm text-gray-500 mt-3">
-              <p>Year: {paper.published_year || "N/A"}</p>
-              <p>Citations: {paper.citation_count}</p>
-              <p>Relevance Score: {paper.final_score.toFixed(4)}</p>
-            </div>
-
-            {paper.url && (
-              <a
-                href={paper.url}
-                target="_blank"
-                className="text-blue-600 underline text-sm mt-2 inline-block"
-              >
-                View Paper →
-              </a>
-            )}
-          </div>
+          <PaperCard key={paper.id} {...paper} />
         ))}
       </div>
     </div>

@@ -5,6 +5,9 @@ from sqlalchemy import text
 from app.config.settings import settings
 from app.core.database import engine, get_db
 from app.api.papers import router as papers_router
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def create_app() -> FastAPI:
   app = FastAPI(

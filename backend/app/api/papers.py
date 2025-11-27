@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models.paper import Paper
-from app.services.ingest_papers import ingest_papers_from_query
 
 router = APIRouter()
 
@@ -12,6 +11,12 @@ def list_papers(db: Session = Depends(get_db)):
   return papers
 
 @router.post("/ingest")
-async def ingest(query: str, db: Session = Depends(get_db)):
-  result = await ingest_papers_from_query(db, query)
-  return result
+async def ingest(
+  query: str,
+  background_tasks: BackgroundTasks,
+  pages: int = 5,
+  db: Session = Depends(get_db)
+):
+  from app.services.ingest_papers import ingest_papers_from_query
+  background_tasks.add_task(ingest_papers_from_query, db, query, pages)
+  return {"status": "started", "query": query, "pages": pages}

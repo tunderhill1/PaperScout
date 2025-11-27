@@ -1,8 +1,10 @@
-# import os
-# import sys
+import os
+import sys
 # Absolute path to backend directory (contains 'app')
 # BACKEND_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-# sys.path.insert(0, BACKEND_PATH)from logging.config import fileConfig
+# sys.path.insert(0, BACKEND_PATH)
+
+from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
 from alembic import context

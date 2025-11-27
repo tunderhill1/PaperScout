@@ -1,11 +1,17 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.config.settings import settings
-from app.models.base import Base
 
-engine = create_engine(settings.database_url, echo=True)
+engine = create_engine(
+  settings.database_url,
+  echo=False,  # turn on only for debugging
+)
 
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+SessionLocal = sessionmaker(
+  bind=engine,
+  autoflush=False,
+  autocommit=False,
+)
 
 def get_db():
   db = SessionLocal()
@@ -13,4 +19,3 @@ def get_db():
     yield db
   finally:
     db.close()
-

@@ -3,7 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.config.settings import settings
-from app.core.database import engine
+from app.core.database import engine, get_db
+from app.api.papers import router as papers_router
 
 def create_app() -> FastAPI:
   app = FastAPI(
@@ -27,6 +28,8 @@ def create_app() -> FastAPI:
     allow_methods=["*"],
     allow_headers=["*"],
   )
+
+  app.include_router(papers_router, prefix="/papers")
 
   @app.get("/health")
   async def health_check():

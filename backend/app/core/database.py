@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.config.settings import settings
+from app.models.base import Base
 
 engine = create_engine(settings.database_url, echo=True)
 
@@ -12,3 +13,7 @@ def get_db():
     yield db
   finally:
     db.close()
+    
+# For migrations and debugging — create tables if not using Alembic yet
+def create_all():
+  Base.metadata.create_all(bind=engine)

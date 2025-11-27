@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import text
 from app.config.settings import settings
+from app.core.database import engine
 
 def create_app() -> FastAPI:
   app = FastAPI(
@@ -10,7 +12,12 @@ def create_app() -> FastAPI:
   )
 
   print(f"Running in: {settings.environment}")
-  print(f"DB URL: {settings.database_url}")
+  print(f"Database URL: {settings.database_url}")
+
+  # Test DB connection at startup
+  with engine.connect() as conn:
+    result = conn.execute(text("SELECT 1"))
+    print("Database connected:", result.scalar())
 
   app.add_middleware(
     CORSMiddleware,

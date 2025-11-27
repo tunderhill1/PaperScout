@@ -5,6 +5,7 @@ from app.models.paper import Paper
 from app.services.ingestion_helpers import get_or_create_author, get_or_create_field
 from app.models.paper_author import PaperAuthor
 from app.models.paper_field import PaperField
+from app.services.ingestion_logger import log_ingestion
 
 import logging
 logger = logging.getLogger(__name__)
@@ -80,8 +81,16 @@ async def ingest_papers_from_query(db: Session, query: str, max_pages: int = 5):
       total_added += 1
 
     db.commit()
+    
+  log_entry = log_ingestion(
+    db,
+    query=query,
+    pages=page,
+    added=total_added
+  )
 
   return {
     "added": total_added,
-    "pages_processed": page
+    "pages_processed": page,
+    "log_id": log_entry.id
   }

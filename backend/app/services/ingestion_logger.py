@@ -10,3 +10,6 @@ def log_ingestion(db: Session, *, query: str, pages: int, added: int):
   db.add(entry)
   db.commit()
   return entry
+
+def list_logs(db: Session):
+  return db.query(IngestionLog).order_by(IngestionLog.id.desc()).limit(20).all()

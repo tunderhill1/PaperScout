@@ -2,7 +2,7 @@ export default function HomePage() {
   return (
     <div className="py-20 text-center">
       <h1 className="text-5xl font-bold mb-6">PaperScout</h1>
-      <p className="text-xl text-gray-600">
+      <p className="text-xl text-gray-400">
         A research search engine powered by embeddings.
       </p>
 

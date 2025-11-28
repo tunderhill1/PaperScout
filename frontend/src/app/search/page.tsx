@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import PaperCard from "@/components/PaperCard";
+import PaperSkeletonCard from "@/components/PaperSkeletonCard";
 
 interface PaperResult {
   id: number;
@@ -20,11 +21,13 @@ export default function SearchPage() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<PaperResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   async function handleSearch() {
-    if (!query.trim()) return;
+    if (!query.trim() || loading) return;
 
     setLoading(true);
+    setError("");
     setResults([]);
 
     try {
@@ -34,10 +37,13 @@ export default function SearchPage() {
         )}`
       );
 
+      if (!res.ok) throw new Error(`Backend error: ${res.status}`);
+
       const data = await res.json();
       setResults(data.results || []);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Search error:", err);
+      setError(err.message || "Search failed");
     } finally {
       setLoading(false);
     }
@@ -47,6 +53,7 @@ export default function SearchPage() {
     <div>
       <h1 className="text-3xl font-bold mb-6">Search Papers</h1>
 
+      {/* Search bar */}
       <div className="flex gap-3 mb-8">
         <input
           value={query}
@@ -58,21 +65,49 @@ export default function SearchPage() {
           className="flex-1 border px-4 py-2 rounded-lg"
           autoFocus
         />
+
         <button
           onClick={handleSearch}
-          className="bg-black text-white px-6 py-2 rounded-lg"
+          disabled={!query.trim() || loading}
+          className={`px-6 py-2 rounded-lg text-white ${
+            !query.trim() || loading
+              ? "bg-gray-400"
+              : "bg-black hover:bg-gray-800"
+          }`}
         >
-          Search
+          {loading ? "Searching…" : "Search"}
         </button>
       </div>
 
-      {loading && <p className="text-gray-600">Searching…</p>}
+      {/* Error box */}
+      {error && (
+        <div className="p-3 mb-6 bg-red-100 text-red-700 border rounded">
+          {error}
+        </div>
+      )}
 
-      <div className="space-y-6">
-        {results.map((paper) => (
-          <PaperCard key={paper.id} {...paper} />
-        ))}
-      </div>
+      {/* Loading skeletons */}
+      {loading && (
+        <div className="space-y-6">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <PaperSkeletonCard key={i} />
+          ))}
+        </div>
+      )}
+
+      {/* No results */}
+      {!loading && !error && results.length === 0 && query.trim() && (
+        <div className="text-gray-500 mt-6">No papers found.</div>
+      )}
+
+      {/* Results */}
+      {!loading && !error && results.length > 0 && (
+        <div className="space-y-6 animate-fadeIn">
+          {results.map((paper) => (
+            <PaperCard key={paper.id} {...paper} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

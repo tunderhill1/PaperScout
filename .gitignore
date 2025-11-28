@@ -20,6 +20,3 @@ backend/.venv/
 
 # Migrations cache (later)
 alembic/__pycache__/
-
-# Notes
-notes.txt

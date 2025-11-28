@@ -22,14 +22,17 @@ export default function PaperCard({
   url,
   published_year,
   citation_count,
+  distance,
   final_score,
   fields = [],
   authors = [],
 }: PaperCardProps) {
   return (
-    <div className="border rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition cursor-pointer">
-      {/* TITLE */}
-      <h2 className="text-xl font-semibold leading-snug">{title}</h2>
+    <div className="border rounded-xl p-6 bg-white shadow-sm hover:shadow-md transition">
+        {/* TITLE */}
+        <h2 className="text-xl font-semibold leading-snug text-gray-900 group-hover:text-black">
+          {title}
+        </h2>
 
       {/* AUTHORS */}
       {authors.length > 0 && (
@@ -60,9 +63,8 @@ export default function PaperCard({
       <div className="flex gap-4 text-sm text-gray-600 mt-4">
         <span>📅 {published_year ?? "N/A"}</span>
         <span>📈 {citation_count} citations</span>
-        <span>
-          ⭐ score: {scoreToTen(final_score).toFixed(1)} / 10
-        </span>
+        <span>🔍 relevancy: {scoreToTen(distance).toFixed(2)} / 10</span>
+        <span>⭐ total score: {scoreToTen(final_score).toFixed(1)} / 10</span>
       </div>
 
       {/* LINK */}
